@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Minimalist Quote Generator</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f0f0f0;
+      }
+      .container {
+        text-align: center;
+        padding: 2rem;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+      }
+      #quote {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+      }
+      #author {
+        font-style: italic;
+        color: #666;
+      }
+      #new-quote {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+      #new-quote:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <p id="quote"></p>
+      <p id="author"></p>
+    </div>
+    <button id="new-quote">New Quote</button>
+
+    <script>
+      const quoteElement = document.getElementById("quote");
+      const authorElement = document.getElementById("author");
+      const newQuoteButton = document.getElementById("new-quote");
+
+      const quotes = [
+        {
+          q: "The only way to do great work is to love what you do.",
+          a: "Steve Jobs",
+        },
+        {
+          q: "Life is what happens when you're busy making other plans.",
+          a: "John Lennon",
+        },
+        {
+          q: "The future belongs to those who believe in the beauty of their dreams.",
+          a: "Eleanor Roosevelt",
+        },
+        {
+          q: "Success is not final, failure is not fatal: it is the courage to continue that counts.",
+          a: "Winston Churchill",
+        },
+        {
+          q: "In the end, it's not the years in your life that count. It's the life in your years.",
+          a: "Abraham Lincoln",
+        },
+        {
+          q: "Be the change you wish to see in the world.",
+          a: "Mahatma Gandhi",
+        },
+        {
+          q: "To be yourself in a world that is constantly trying to make you something else is the greatest accomplishment.",
+          a: "Ralph Waldo Emerson",
+        },
+        {
+          q: "Two roads diverged in a wood, and I—I took the one less traveled by, And that has made all the difference.",
+          a: "Robert Frost",
+        },
+        {
+          q: "I have not failed. I've just found 10,000 ways that won't work.",
+          a: "Thomas A. Edison",
+        },
+        {
+          q: "The only impossible journey is the one you never begin.",
+          a: "Tony Robbins",
+        },
+        {
+          q: "Do what you can, with what you have, where you are.",
+          a: "Theodore Roosevelt",
+        },
+        { q: "Be yourself; everyone else is already taken.", a: "Oscar Wilde" },
+        {
+          q: "The greatest glory in living lies not in never falling, but in rising every time we fall.",
+          a: "Nelson Mandela",
+        },
+        {
+          q: "The way to get started is to quit talking and begin doing.",
+          a: "Walt Disney",
+        },
+        {
+          q: "Your time is limited, don't waste it living someone else's life.",
+          a: "Steve Jobs",
+        },
+        {
+          q: "If life were predictable it would cease to be life, and be without flavor.",
+          a: "Eleanor Roosevelt",
+        },
+        {
+          q: "If you look at what you have in life, you'll always have more.",
+          a: "Oprah Winfrey",
+        },
+        {
+          q: "If you set your goals ridiculously high and it's a failure, you will fail above everyone else's success.",
+          a: "James Cameron",
+        },
+        {
+          q: "Life is what happens when you're busy making other plans.",
+          a: "John Lennon",
+        },
+        {
+          q: "Spread love everywhere you go. Let no one ever come to you without leaving happier.",
+          a: "Mother Teresa",
+        },
+        {
+          q: "When you reach the end of your rope, tie a knot in it and hang on.",
+          a: "Franklin D. Roosevelt",
+        },
+        {
+          q: "Always remember that you are absolutely unique. Just like everyone else.",
+          a: "Margaret Mead",
+        },
+        {
+          q: "Don't judge each day by the harvest you reap but by the seeds that you plant.",
+          a: "Robert Louis Stevenson",
+        },
+        {
+          q: "The future belongs to those who believe in the beauty of their dreams.",
+          a: "Eleanor Roosevelt",
+        },
+        {
+          q: "Tell me and I forget. Teach me and I remember. Involve me and I learn.",
+          a: "Benjamin Franklin",
+        },
+        {
+          q: "The best and most beautiful things in the world cannot be seen or even touched - they must be felt with the heart.",
+          a: "Helen Keller",
+        },
+        {
+          q: "It is during our darkest moments that we must focus to see the light.",
+          a: "Aristotle",
+        },
+        { q: "Whoever is happy will make others happy too.", a: "Anne Frank" },
+        {
+          q: "Do not go where the path may lead, go instead where there is no path and leave a trail.",
+          a: "Ralph Waldo Emerson",
+        },
+        {
+          q: "You will face many defeats in life, but never let yourself be defeated.",
+          a: "Maya Angelou",
+        },
+        {
+          q: "The greatest glory in living lies not in never falling, but in rising every time we fall.",
+          a: "Nelson Mandela",
+        },
+        {
+          q: "In the end, it's not the years in your life that count. It's the life in your years.",
+          a: "Abraham Lincoln",
+        },
+        {
+          q: "Never let the fear of striking out keep you from playing the game.",
+          a: "Babe Ruth",
+        },
+        {
+          q: "Life is either a daring adventure or nothing at all.",
+          a: "Helen Keller",
+        },
+        {
+          q: "Many of life's failures are people who did not realize how close they were to success when they gave up.",
+          a: "Thomas A. Edison",
+        },
+        {
+          q: "You have brains in your head. You have feet in your shoes. You can steer yourself any direction you choose.",
+          a: "Dr. Seuss",
+        },
+        {
+          q: "If life were predictable it would cease to be life and be without flavor.",
+          a: "Eleanor Roosevelt",
+        },
+        {
+          q: "In the end, it's not the years in your life that count. It's the life in your years.",
+          a: "Abraham Lincoln",
+        },
+        {
+          q: "Life is a succession of lessons which must be lived to be understood.",
+          a: "Ralph Waldo Emerson",
+        },
+        {
+          q: "You will face many defeats in life, but never let yourself be defeated.",
+          a: "Maya Angelou",
+        },
+        {
+          q: "Never let the fear of striking out keep you from playing the game.",
+          a: "Babe Ruth",
+        },
+        {
+          q: "Life is never fair, and perhaps it is a good thing for most of us that it is not.",
+          a: "Oscar Wilde",
+        },
+        {
+          q: "The only impossible journey is the one you never begin.",
+          a: "Tony Robbins",
+        },
+        {
+          q: "In this life we cannot do great things. We can only do small things with great love.",
+          a: "Mother Teresa",
+        },
+        {
+          q: "Only a life lived for others is a life worthwhile.",
+          a: "Albert Einstein",
+        },
+        { q: "The purpose of our lives is to be happy.", a: "Dalai Lama" },
+        {
+          q: "You only live once, but if you do it right, once is enough.",
+          a: "Mae West",
+        },
+        {
+          q: "Live in the sunshine, swim the sea, drink the wild air.",
+          a: "Ralph Waldo Emerson",
+        },
+        {
+          q: "Go confidently in the direction of your dreams! Live the life you've imagined.",
+          a: "Henry David Thoreau",
+        },
+        {
+          q: "The greatest glory in living lies not in never falling, but in rising every time we fall.",
+          a: "Nelson Mandela",
+        },
+        {
+          q: "Life is really simple, but we insist on making it complicated.",
+          a: "Confucius",
+        },
+        { q: "May you live all the days of your life.", a: "Jonathan Swift" },
+        {
+          q: "Life is ours to be spent, not to be saved.",
+          a: "D. H. Lawrence",
+        },
+        {
+          q: "Keep smiling, because life is a beautiful thing and there's so much to smile about.",
+          a: "Marilyn Monroe",
+        },
+        { q: "Life is a long lesson in humility.", a: "James M. Barrie" },
+        {
+          q: "In three words I can sum up everything I've learned about life: it goes on.",
+          a: "Robert Frost",
+        },
+        {
+          q: "Love the life you live. Live the life you love.",
+          a: "Bob Marley",
+        },
+        {
+          q: "Life is either a daring adventure or nothing at all.",
+          a: "Helen Keller",
+        },
+        {
+          q: "You have brains in your head. You have feet in your shoes. You can steer yourself any direction you choose.",
+          a: "Dr. Seuss",
+        },
+        {
+          q: "Life is made of ever so many partings welded together.",
+          a: "Charles Dickens",
+        },
+        {
+          q: "Your time is limited, so don't waste it living someone else's life.",
+          a: "Steve Jobs",
+        },
+        { q: "Life is trying things to see if they work.", a: "Ray Bradbury" },
+        {
+          q: "Many of life's failures are people who did not realize how close they were to success when they gave up.",
+          a: "Thomas A. Edison",
+        },
+        {
+          q: "Success is not final; failure is not fatal: It is the courage to continue that counts.",
+          a: "Winston S. Churchill",
+        },
+        {
+          q: "The secret of success is to do the common thing uncommonly well.",
+          a: "John D. Rockefeller Jr.",
+        },
+        {
+          q: "I find that the harder I work, the more luck I seem to have.",
+          a: "Thomas Jefferson",
+        },
+        {
+          q: "The real test is not whether you avoid this failure, because you won't. It's whether you let it harden or shame you into inaction, or whether you learn from it; whether you choose to persevere.",
+          a: "Barack Obama",
+        },
+        {
+          q: "Don't be distracted by criticism. Remember--the only taste of success some people get is to take a bite out of you.",
+          a: "Zig Ziglar",
+        },
+        {
+          q: "I never dreamed about success, I worked for it.",
+          a: "Estee Lauder",
+        },
+        {
+          q: "Success seems to be connected with action. Successful people keep moving. They make mistakes but they don't quit.",
+          a: "Conrad Hilton",
+        },
+        {
+          q: "There are no secrets to success. It is the result of preparation, hard work, and learning from failure.",
+          a: "Colin Powell",
+        },
+        {
+          q: "The only place where success comes before work is in the dictionary.",
+          a: "Vidal Sassoon",
+        },
+        {
+          q: "I owe my success to having listened respectfully to the very best advice, and then going away and doing the exact opposite.",
+          a: "G. K. Chesterton",
+        },
+        {
+          q: "Would you like me to give you a formula for success? It's quite simple, really: Double your rate of failure. You are thinking of failure as the enemy of success. But it isn't at all. You can be discouraged by failure or you can learn from it, so go ahead and make mistakes. Make all you can. Because remember that's where you will find success.",
+          a: "Thomas J. Watson",
+        },
+        {
+          q: "If you are not willing to risk the usual, you will have to settle for the ordinary.",
+          a: "Jim Rohn",
+        },
+        {
+          q: "The ones who are crazy enough to think they can change the world, are the ones that do.",
+          a: "Anonymous",
+        },
+        { q: "Do one thing every day that scares you.", a: "Anonymous" },
+        {
+          q: "All progress takes place outside the comfort zone.",
+          a: "Michael John Bobak",
+        },
+        {
+          q: "People who succeed have momentum. The more they succeed, the more they want to succeed, and the more they find a way to succeed. Similarly, when someone is failing, the tendency is to get on a downward spiral that can even become a self-fulfilling prophecy.",
+          a: "Tony Robbins",
+        },
+        {
+          q: "Don't let the fear of losing be greater than the excitement of winning.",
+          a: "Robert Kiyosaki",
+        },
+        {
+          q: "If you really look closely, most overnight successes took a long time.",
+          a: "Steve Jobs",
+        },
+        {
+          q: "The real test is not whether you avoid this failure, because you won't. It's whether you let it harden or shame you into inaction, or whether you learn from it; whether you choose to persevere.",
+          a: "Barack Obama",
+        },
+        {
+          q: "The only limit to our realization of tomorrow will be our doubts of today.",
+          a: "Franklin D. Roosevelt",
+        },
+        {
+          q: "Character cannot be developed in ease and quiet. Only through experience of trial and suffering can the soul be strengthened, ambition inspired, and success achieved.",
+          a: "Helen Keller",
+        },
+        {
+          q: "The way to get started is to quit talking and begin doing.",
+          a: "Walt Disney",
+        },
+        {
+          q: "The successful warrior is the average man, with laser-like focus.",
+          a: "Bruce Lee",
+        },
+        {
+          q: "There are no secrets to success. It is the result of preparation, hard work, and learning from failure.",
+          a: "Colin Powell",
+        },
+        {
+          q: "Success is not the key to happiness. Happiness is the key to success. If you love what you are doing, you will be successful.",
+          a: "Albert Schweitzer",
+        },
+        {
+          q: "Success usually comes to those who are too busy to be looking for it.",
+          a: "Henry David Thoreau",
+        },
+        {
+          q: "Opportunities don't happen. You create them.",
+          a: "Chris Grosser",
+        },
+        {
+          q: "Don't be afraid to give up the good to go for the great.",
+          a: "John D. Rockefeller",
+        },
+        {
+          q: "I find that when you have a real interest in life and a curious life, that sleep is not the most important thing.",
+          a: "Martha Stewart",
+        },
+        {
+          q: "The whole secret of a successful life is to find out what is one's destiny to do, and then do it.",
+          a: "Henry Ford",
+        },
+        {
+          q: "If you're going through hell, keep going.",
+          a: "Winston Churchill",
+        },
+        {
+          q: "What seems to us as bitter trials are often blessings in disguise.",
+          a: "Oscar Wilde",
+        },
+        {
+          q: "The distance between insanity and genius is measured only by success.",
+          a: "Bruce Feirstein",
+        },
+        { q: "Don't raise your voice, improve your argument.", a: "Anonymous" },
+        {
+          q: "What we achieve inwardly will change outer reality.",
+          a: "Plutarch",
+        },
+      ];
+
+      function getRandomQuote() {
+        const randomIndex = Math.floor(Math.random() * quotes.length);
+        return quotes[randomIndex];
+      }
+
+      function displayQuote(quote, author) {
+        quoteElement.textContent = `"${quote}"`;
+        authorElement.textContent = `- ${author}`;
+      }
+
+      function newQuote() {
+        const { q, a } = getRandomQuote();
+        displayQuote(q, a);
+      }
+
+      newQuoteButton.addEventListener("click", newQuote);
+
+      // Display a quote when the page loads
+      newQuote();
+    </script>
+  </body>
+</html>
